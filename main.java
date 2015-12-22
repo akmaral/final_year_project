@@ -6,33 +6,36 @@ import java.util.List;
 public class main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		HashMap<String, List<String>> perm = new HashMap<String,List<String>>();
 		HashMap<String, List<String>> dataset  = new HashMap<String,List<String>>();
-		HashMap<String,String> indexes = new HashMap<String,String>();
+		HashMap<String, List<String>> indexes = new HashMap<String,List<String>>();
+		HashMap<String,String> getIndex = new HashMap<String,String>();
+		
 		complete_dataset completeDataset = new complete_dataset();
-		save_dataset_into_file save = new save_dataset_into_file();
-		dataset = completeDataset.reading_from_file("Resource/toy_test.txt");
-		save.saveDatasetIntoFile(dataset, "Resource/complete_dataset");
-		//completeDataset.saveDatasetIntoFile(dataset);
+		dataset = completeDataset.reading_from_file("Resource/toy_test.txt"); //full dataset
+		indexes = completeDataset.reading_from_file("Resource/toy_test2.txt"); //short dataset just for testing
+		
+		save_dataset_into_file.saveDatasetIntoFile(dataset, "Resource/complete_dataset");
+		
+
 		for(int i=0;i<5;i++){
-			perm = trainingSet2.createTrainingSet(dataset);
-			//System.out.println(perm);
-			save.saveDatasetIntoFile(perm,"Resource/training_dataset-"+i+".txt");
+			split_dataset.splitDataset(indexes); //for testing use indexes, but usually use dataset
+			perm = split_dataset.getTrainingDataset();
+//			save_dataset_into_file.saveDatasetIntoFile(perm,"Resource/training_dataset-"+i+".txt");
+			user_product_index.indexGeneration(perm);
+			getIndex = user_product_index.getUserIndex();
+			save_dataset_into_file.saveIndexesIntoFile(getIndex,"Resource/user_index-"+i+".txt");
 			perm.clear();
 		}
-		for(int m=0;m<5;m++){
-			perm = testing_dataset.createTestingSet(dataset);
-			save.saveDatasetIntoFile(perm, "Resource/testing_dataset-"+m+".txt");
+		for(int l=0;l<5;l++){
+			split_dataset.splitDataset(indexes); //for testing use indexes, but usually use dataset
+			perm = split_dataset.getTestingDataset();
+//			save_dataset_into_file.saveDatasetIntoFile(perm,"Resource/testing_dataset-"+l+".txt");
+			user_product_index.indexGeneration(perm);
+			getIndex = user_product_index.getProductIndex();
+			save_dataset_into_file.saveIndexesIntoFile(getIndex,"Resource/product_index-"+l+".txt");
 			perm.clear();
-		}
-		for(int i=0;i<5;i++){
-			indexes=user_index.userIndexGeneration();
-			save_dataset_into_file.saveIndexesIntoFile(indexes,"Resource/user_index-"+i+".txt");
-		}
-		for(int i=0;i<5;i++){
-			indexes=product_index.userIndexGeneration();
-			save_dataset_into_file.saveIndexesIntoFile(indexes,"Resource/product_index-"+i+".txt");
 		}
 	}
 

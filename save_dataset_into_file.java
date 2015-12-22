@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 public class save_dataset_into_file {
 	
-	public void saveDatasetIntoFile(HashMap<String, List<String>> dataset,String filename) {
+	public static void saveDatasetIntoFile(HashMap<String, List<String>> dataset,String filename) {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
 
@@ -31,7 +31,6 @@ public class save_dataset_into_file {
 				bw.newLine();
 				bw.flush();
 			}
-			System.out.println("\ndataset was successfully saved in the file.\n");
 			bw.close();
 		} 
 		catch (Exception e) {
@@ -53,8 +52,6 @@ public class save_dataset_into_file {
 			}
 			bw.newLine();
 			bw.flush();
-
-			System.out.println("\ndataset was successfully saved in the file.\n");
 			bw.close();
 		} 
 		catch (Exception e) {

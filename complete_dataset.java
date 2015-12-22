@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class complete_dataset {
+	
 	public HashMap<String, List<String>> user_product_dataset;
 	public ArrayList<String> product_id;
 	public complete_dataset(){
