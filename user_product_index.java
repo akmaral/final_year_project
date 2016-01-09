@@ -14,9 +14,8 @@ public class user_product_index  {
 
 		String key;
 		List<String> value;
-		
+
 		for(Entry<String, List<String>> entry : indexes.entrySet()) {
-			//System.out.println("hashmap temp: "+temp);
 			key = entry.getKey(); 
 			value = entry.getValue();
 			try
@@ -32,22 +31,24 @@ public class user_product_index  {
 				ResultSet rs;
 				ArrayList<String> list = new ArrayList<String>();
 				String concatenated = "";
+				
 				for(int i=0;i<value.size();i++){
+					/*query for getting reviews from the database using review's Id*/
 					rs = stmt.executeQuery("SELECT review FROM test WHERE appId="+value.get(i));
-					//System.out.println(value.get(i));
 					while ( rs.next() ) {
 						String review = rs.getString("review");
-						list.add(review);
-						//System.out.println(value.get(i) + "  \t" + review);
+						list.add(review); //list of reviews for each product
 					}
-					for (String s : list)
-					{
-						concatenated += s + "\t";
-					}
-					//String stopWords = removeStopwords(userIndex,);
-					userIndex.put(key,concatenated);
-					productIndex.put(value.get(i),concatenated);
+				} /*to concatenate all the reviews into one string for each user*/
+				for (String s : list)
+				{
+					concatenated += s + "\t";
 				}
+				userIndex.put(key, concatenated);
+				for(int k=0;k<value.size();k++){
+					productIndex.put(value.get(k),concatenated);
+				}
+
 				conn.close();
 			}
 			catch (Exception e)
@@ -57,16 +58,14 @@ public class user_product_index  {
 			} 
 		}
 		indexes.clear();
-		System.out.println("userIndex:\t"+userIndex);
-		System.out.println("product index: " + productIndex  + "\n");
 	}
-	
+
 	public static HashMap<String, String> getUserIndex(){
 		return userIndex;
 	}
-	
+
 	public static HashMap<String, String> getProductIndex(){
 		return productIndex;
 	}
-	
+
 } 

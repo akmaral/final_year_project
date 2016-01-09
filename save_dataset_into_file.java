@@ -48,10 +48,11 @@ public class save_dataset_into_file {
 
 				bw.write(entry.getKey() + "\t");
 				bw.write(entry.getValue() + "\t");
-
+				
+				bw.newLine();
+				bw.flush();
 			}
-			bw.newLine();
-			bw.flush();
+			
 			bw.close();
 		} 
 		catch (Exception e) {

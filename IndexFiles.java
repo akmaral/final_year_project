@@ -21,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 /** Index all text files under a directory.
@@ -33,25 +35,27 @@ public class IndexFiles {
   private IndexFiles() {}
 
   /** Index all text files under a directory. */
-  public static void main(String[] args) {
+  public static void main(Path args) {
     String usage = "java org.apache.lucene.demo.IndexFiles"
-                 + " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
+                 + " [-index /Users/akmaralakhanova/Documents/ucd_my_workspace"
+			+ "/review_based_recommender/Resource/result] [-docs /Users/akmaralakhanova/Documents/ucd_my_workspace"
+			+ "/review_based_recommender/Resource/user_index-0] [-update]\n\n"
                  + "This indexes the documents in DOCS_PATH, creating a Lucene index"
                  + "in INDEX_PATH that can be searched with SearchFiles";
-    String indexPath = "index";
+    Path indexPath = Paths.get("index");
     String docsPath = null;
     boolean create = true;
-    for(int i=0;i<args.length;i++) {
-      if ("-index".equals(args[i])) {
-        indexPath = args[i+1];
-        i++;
-      } else if ("-docs".equals(args[i])) {
-        docsPath = args[i+1];
-        i++;
-      } else if ("-update".equals(args[i])) {
-        create = false;
-      }
-    }
+//    for(int i=0;i<args.length;i++) {
+//      if ("-index".equals(args[i])) {
+//        indexPath = args[i+1];
+//        i++;
+//      } else if ("-docs".equals(args[i])) {
+//        docsPath = args[i+1];
+//        i++;
+//      } else if ("-update".equals(args[i])) {
+//        create = false;
+//      }
+//    }
 
     if (docsPath == null) {
       System.err.println("Usage: " + usage);
@@ -68,7 +72,7 @@ public class IndexFiles {
     try {
       System.out.println("Indexing to directory '" + indexPath + "'...");
 
-      Directory dir = FSDirectory.open(new File(indexPath));
+      Directory dir = FSDirectory.open(indexPath);
       // :Post-Release-Update-Version.LUCENE_XY:
       Analyzer analyzer = new StandardAnalyzer();
       IndexWriterConfig iwc = new IndexWriterConfig(analyzer);

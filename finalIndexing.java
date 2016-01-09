@@ -19,7 +19,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 
 
-public class LuceneTest 
+public class finalIndexing 
 {
 	public static void main(String[] args)
 	{
@@ -35,12 +35,8 @@ public class LuceneTest
 			IndexWriterConfig config = new IndexWriterConfig(analyzer);
 			
 			IndexWriter w = new IndexWriter(index, config);
-			addDoc(w, "Lucene in Action", "193398817");
+			addDoc(w, "", "193398817");
 			addDoc(w, "Lucene for Dummies", "55320055Z");
-			addDoc(w, "Managing Gigabytes", "55063554A");
-			addDoc(w, "The Art of Computer Science", "9900333X");
-			addDoc(w, "My name is teja", "12842d99");
-			addDoc(w, "Lucene demo by teja", "23k43413");
 			w.close();
 			
 			//	Text to search
@@ -78,7 +74,7 @@ public class LuceneTest
 	{
 		  Document doc = new Document();
 		  // A text field will be tokenized
-		  doc.add(new TextField("title", title, Field.Store.YES));
+		  doc.add(new TextField("userIndex", title, Field.Store.YES));
 		  // We use a string field for isbn because we don\'t want it tokenized
 		  doc.add(new StringField("isbn", isbn, Field.Store.YES));
 		  w.addDocument(doc);

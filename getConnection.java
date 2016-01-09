@@ -24,8 +24,8 @@ public class getConnection  {
 				String user_id = rs.getString("userId");
 				String app_id = rs.getString("appId");
 				test.put(user_id, app_id);				
-				System.out.println("this is my array: \t" + test);
-				
+				save_dataset_into_file.saveIndexesIntoFile(test, "Resource/full dataset");
+				//System.out.println("this is my array: \t" + test);
 			}
 			conn.close();
 		}
