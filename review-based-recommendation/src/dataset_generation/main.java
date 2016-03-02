@@ -1,8 +1,13 @@
 package dataset_generation;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.lucene.queryparser.classic.ParseException;
+
 
 public class main {
 	
@@ -11,9 +16,10 @@ public class main {
 	static HashMap<String,List<String>> testing_dataset = new HashMap<String,List<String>>();
 	static HashMap<String,String> userIndex = new HashMap<String,String>();
 	static HashMap<String,String> productIndex = new HashMap<String,String>();
+	static List<String> listOfStopwords = new ArrayList<String>();
+	static HashMap<String,List<String>> recommendations = new HashMap<String,List<String>>();
 	
-	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 
 		read_from_file readff = new read_from_file("Resource/apps_dataset");
 		complete_dataset = readff.get_complete_dataset();
@@ -39,12 +45,27 @@ public class main {
 			productIndex = user_product_index.getProductIndex();
 			
 			save_dataset_into_file.saveIndexesIntoFile(userIndex, "Resource/apps_user_index-"+i+".txt");			
-			save_dataset_into_file.saveIndexesIntoFile(productIndex, "Resource/apps_product_index-"+i+".txt");			
+			save_dataset_into_file.saveIndexesIntoFile(productIndex, "Resource/apps_product_index-"+i+".txt");	
+			
+			stopwords stopwords = new stopwords();
+			listOfStopwords = stopwords.list_of_stopwords();
+			
+			Indexer indexer = new Indexer();
+
+			indexer.productIndex(productIndex,new File("/Users/akmaralakhanova/Documents/ucd_my_workspace/"
+					+ "review-based-recommendation/Resource/productIndexOut"),listOfStopwords);
+
+			query_search q = new query_search();
+			q.queryMaker(userIndex, listOfStopwords);
+			
+			recommendations = q.get_recommendations();
+			save_dataset_into_file.saveDatasetIntoFile(recommendations, "Resource/recommendations-"+i+".txt");
 
 			training_dataset.clear();
 			testing_dataset.clear();
 			userIndex.clear();
 			productIndex.clear();
+			recommendations.clear();
 		}
 	}
 	

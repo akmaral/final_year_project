@@ -60,4 +60,26 @@ public class save_dataset_into_file {
 			e.printStackTrace();
 		}
 	}
+	public static void saveValuesIntoFile(HashMap<String, Float> dataset,String filename) {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+
+			Iterator<Entry<String, Float>> it = dataset.entrySet().iterator();
+
+			while(it.hasNext()) {
+				Entry<String, Float> entry = it.next();
+
+				bw.write(entry.getKey() + "\t");
+				bw.write(entry.getValue() + "\t");
+				
+				bw.newLine();
+				bw.flush();
+			}
+			System.out.println("values " + filename + "  successfully saved");
+			bw.close();
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

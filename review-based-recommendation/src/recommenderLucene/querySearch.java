@@ -27,8 +27,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.util.Version;
-import org.apache.lucene.util.automaton.RegExp;
 import org.tartarus.snowball.ext.PorterStemmer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -51,10 +49,18 @@ public class querySearch {
 			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
 
 				for(String line; (line = br.readLine()) != null; ) {
-					System.out.println("\n"+line);
+					System.out.println("\n"+" query search line: " + line);
 					String[] parts = line.split("\t");
+					String newString = "";
+					if(parts.length>1){
+						StringBuilder strBuilder = new StringBuilder();
+						for(int i=1;i<parts.length;i++){
+							strBuilder.append(parts[i]);
+							newString = strBuilder.toString();
+						}
+					}
 
-					StringReader strreader = new StringReader(parts[1].toLowerCase()); //String reader reads each value in the hashmap (each review)
+					StringReader strreader = new StringReader(newString.toLowerCase()); //String reader reads each value in the hashmap (each review)
 					Tokenizer tokenizer = new StandardTokenizer(strreader);
 					tokenizer.setReader(strreader);
 
@@ -81,21 +87,16 @@ public class querySearch {
 						reviews_concatenated += s + "\t";
 					}
 
-
 					FSDirectory directory = NIOFSDirectory.open(new File("/Users/akmaralakhanova/Documents/ucd_my_workspace/"
 							+ "review-based-recommendation/productIndexOut"));
 					Analyzer analyzer = new StandardAnalyzer();
 
 					System.out.println("user id: " + parts[0]);
 					System.out.println(reviews_concatenated);
-					//	The \"title\" arg specifies the default field to use when no field is explicitly specified in the query
 					QueryParser parser = new QueryParser("review", analyzer);
-					//Query q = new QueryParser("review", analyzer).parse(QueryParser.escape(reviews_concatenated));
 					String cooked;
-					// consider changing this "" to " "
 					cooked = reviews_concatenated.replaceAll("[^\\w\\s\\(1\\+1\\)\\:2]"," ");
 					Query q = parser.parse(QueryParser.escape(cooked));
-
 					
 					BooleanQuery.setMaxClauseCount(2000000);
 
@@ -107,14 +108,12 @@ public class querySearch {
 					searcher.search(q, collector);
 
 					ScoreDoc[] hits = collector.topDocs().scoreDocs;
-					System.out.println("total hits: " + collector.getTotalHits());
 					Document d = null;
 					//	Code to display the results of search
-					System.out.println("Found " + hits.length + " hits.");
+					//System.out.println("Found " + hits.length + " hits.");
 					List<String> productID = new ArrayList<String>();
 					for(int i=0;i<hits.length;++i) 
 					{
-						//System.out.println(hits[i]);
 						int docId = hits[i].doc;
 						//System.out.println("Score: " + hits[i].score);
 						d = searcher.doc(docId);
@@ -123,7 +122,6 @@ public class querySearch {
 						if(!productID.contains(d.get("id"))){
 							productID.add(d.get("id"));
 						}
-
 					}
 					if(!recommendations.containsValue(productID)){
 						recommendations.put(parts[0], productID);
